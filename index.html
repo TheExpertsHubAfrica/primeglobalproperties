@@ -25,6 +25,135 @@
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+      /* Custom styles for modern homepage design */
+      .hero-wrap {
+        position: relative;
+        background-size: cover !important;
+        background-position: center !important;
+        min-height: 100vh;
+      }
+      
+      .hero-wrap .overlay {
+        background: rgba(0, 0, 0, 0.3) !important;
+      }
+      
+      .hero-wrap h1 {
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      }
+      
+      .hero-heading {
+        font-size: 36px !important;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+      
+      .request-form-wrapper {
+        margin-top: 60px;
+        position: relative;
+        z-index: 1;
+      }
+      
+      #request-form {
+        padding-top: 80px !important;
+        padding-bottom: 80px !important;
+      }
+      
+      /* Center navigation on desktop */
+      @media (min-width: 992px) {
+        .navbar-collapse {
+          display: flex !important;
+          justify-content: space-between;
+          align-items: center;
+        }
+      }
+      
+      .request-form input:focus {
+        border-color: #4A90E2;
+        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+      }
+      
+      .request-form button:hover {
+        background-color: #0D3B66;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      /* Navigation button styling */
+      .navbar-nav .btn-primary {
+        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+        transition: all 0.3s ease;
+      }
+      
+      .navbar-nav .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(74, 144, 226, 0.5);
+      }
+      
+      /* Smooth scroll */
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      /* Responsive font sizes for hero heading */
+      @media (min-width: 992px) {
+        .hero-heading {
+          font-size: 40px !important;
+        }
+      }
+      
+      @media (min-width: 1200px) {
+        .hero-heading {
+          font-size: 42px !important;
+        }
+      }
+      
+      @media (max-width: 991.98px) {
+        .hero-heading {
+          font-size: 26px !important;
+        }
+        .request-form-wrapper {
+          margin-top: 30px;
+        }
+        .request-form-wrapper h2 {
+          font-size: 28px !important;
+        }
+        
+        #request-form {
+          padding-top: 40px !important;
+          padding-bottom: 40px !important;
+        }
+        
+        /* Show contact button on mobile in navbar */
+        .navbar-collapse .btn-primary {
+          display: block !important;
+          margin-top: 15px;
+          text-align: center;
+        }
+        
+        /* White background for mobile header */
+        .ftco_navbar.ftco-navbar-light {
+          background: #fff !important;
+        }
+        
+        .ftco-navbar-light .navbar-brand img {
+          filter: none;
+        }
+        
+        .ftco-navbar-light .navbar-toggler {
+          color: #000 !important;
+          border-color: #000 !important;
+        }
+        
+        .ftco-navbar-light .navbar-nav > .nav-item > .nav-link {
+          color: #000 !important;
+        }
+      }
+    </style>
   </head>
   <body>
     
@@ -36,15 +165,14 @@
 	      </button>
 
 	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
+	        <ul class="navbar-nav mx-auto align-items-center">
 	          <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
 	          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-	          <li class="nav-item"><a href="agent.html" class="nav-link">Agent</a></li>
 	          <li class="nav-item"><a href="services.html" class="nav-link">Services</a></li>
 	          <li class="nav-item"><a href="properties.html" class="nav-link">Properties</a></li>
-	          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact Us</a></li>
 	        </ul>
+	        <a href="#request-form" class="btn btn-primary px-4 py-2 d-none d-lg-block" style="border-radius: 25px; font-weight: 600; font-size: 14px; white-space: nowrap;">CONTACT AN AGENT</a>
 	      </div>
 	    </div>
 	  </nav>
@@ -53,33 +181,53 @@
     <div class="hero-wrap ftco-degree-bg" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
-        <div class="row no-gutters slider-text justify-content-center align-items-center">
-          <div class="col-lg-8 col-md-6 ftco-animate d-flex align-items-end">
+        <div class="row no-gutters slider-text justify-content-center align-items-center" style="min-height: 600px;">
+          <div class="col-lg-10 col-md-12 ftco-animate d-flex align-items-center justify-content-center">
           	<div class="text text-center">
-	            <h1 class="mb-4">Prime Global Properties <br>Simply the Best</h1>
-	            <p style="font-size: 18px;">Helping You to Find The Right Property - Specializing in land sales, affordable housing, building and construction in Ghana</p>
-	            <form action="#" class="search-location mt-md-5">
-		        		<div class="row justify-content-center">
-		        			<div class="col-lg-10 align-items-end">
-		        				<div class="form-group">
-		          				<div class="form-field">
-				                <input type="text" class="form-control" placeholder="Search location">
-				                <button><span class="ion-ios-search"></span></button>
-				              </div>
-			              </div>
-		        			</div>
-		        		</div>
-		        	</form>
+	            <h1 class="mb-4 hero-heading">Reimagine Home And <span style="color: #4A90E2; white-space: nowrap;">Property</span> Ownership in Ghana</h1>
+	            <a href="#request-form" class="btn btn-primary btn-lg px-5 py-3 mt-4" style="border-radius: 30px; font-size: 18px;">CONTACT AN AGENT</a>
             </div>
           </div>
         </div>
       </div>
       <div class="mouse">
-				<a href="#" class="mouse-icon">
+				<a href="#request-form" class="mouse-icon">
 					<div class="mouse-wheel"><span class="ion-ios-arrow-round-down"></span></div>
 				</a>
 			</div>
     </div>
+
+    <section class="ftco-section py-5 bg-light" id="request-form">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <div class="request-form-wrapper bg-white p-5" style="border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+              <div class="row align-items-center">
+                <div class="col-md-6 mb-4 mb-md-0">
+                  <h3 style="color: #4A90E2; font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">NEED A QUICK LAND SURVEY OR PROPERTY?</h3>
+                  <h2 style="font-size: 42px; font-weight: 700; color: #000; margin-top: 15px;">Send Us A Request</h2>
+                </div>
+                <div class="col-md-6">
+                  <form action="#" class="request-form">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <input type="text" class="form-control" placeholder="Enter your full name" style="padding: 15px 20px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px;" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <input type="tel" class="form-control" placeholder="Phone number" style="padding: 15px 20px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px;" required>
+                      </div>
+                      <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary btn-block" style="padding: 15px; border-radius: 8px; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">SEND</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="ftco-section ftco-no-pb">
       <div class="container">
