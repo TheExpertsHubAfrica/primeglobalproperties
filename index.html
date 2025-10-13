@@ -31,7 +31,9 @@
         position: relative;
         background-size: cover !important;
         background-position: center !important;
-        min-height: 100vh;
+        min-height: 80vh !important;
+        display: flex;
+        align-items: center;
       }
       
       .hero-wrap .overlay {
@@ -41,6 +43,10 @@
       .hero-wrap h1 {
         color: #fff;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      }
+      
+      .hero-wrap .container {
+        margin-top: 0 !important;
       }
       
       .hero-heading {
@@ -181,11 +187,11 @@
     <div class="hero-wrap ftco-degree-bg" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
-        <div class="row no-gutters slider-text justify-content-center align-items-center" style="min-height: 600px;">
-          <div class="col-lg-10 col-md-12 ftco-animate d-flex align-items-center justify-content-center">
+        <div class="row no-gutters slider-text justify-content-center align-items-center">
+          <div class="col-lg-10 col-md-12 ftco-animate">
           	<div class="text text-center">
-	            <h1 class="mb-4 hero-heading">Reimagine Home And <span style="color: #4A90E2; white-space: nowrap;">Property</span> Ownership in Ghana</h1>
-	            <a href="#request-form" class="btn btn-primary btn-lg px-5 py-3 mt-4" style="border-radius: 30px; font-size: 18px;">CONTACT AN AGENT</a>
+	            <h1 class="hero-heading mb-4">Reimagine Home And <span style="color: #4A90E2; white-space: nowrap;">Property</span> Ownership in Ghana</h1>
+	            <a href="#request-form" class="btn btn-primary btn-lg px-5 py-3 mt-3" style="border-radius: 30px; font-size: 18px;">CONTACT AN AGENT</a>
             </div>
           </div>
         </div>
