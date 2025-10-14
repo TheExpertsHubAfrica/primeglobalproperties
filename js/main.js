@@ -243,15 +243,11 @@
 
 		 	var hash = this.hash,
 		 			navToggler = $('.navbar-toggler');
-		 	
-		 	// Check if target exists before scrolling
-		 	if ($(hash).length > 0) {
-			 	$('html, body').animate({
-			    scrollTop: $(hash).offset().top
-			  }, 700, 'easeInOutExpo', function(){
-			    window.location.hash = hash;
-			  });
-		 	}
+		 	$('html, body').animate({
+		    scrollTop: $(hash).offset().top
+		  }, 700, 'easeInOutExpo', function(){
+		    window.location.hash = hash;
+		  });
 
 
 		  if ( navToggler.is(':visible') ) {
@@ -309,7 +305,7 @@
 			
 			event.preventDefault();
 
-			// Only animate if .goto-here section exists
+			// Check if goto-here section exists before scrolling
 			if ($('.goto-here').length > 0) {
 				$('html,body').animate({
 					scrollTop: $('.goto-here').offset().top
@@ -319,11 +315,7 @@
 			return false;
 		});
 	};
-	
-	// Only enable goHere on desktop, not on mobile
-	if (!isMobile.any()) {
-		goHere();
-	}
+	goHere();
 
 
 })(jQuery);
