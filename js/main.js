@@ -243,11 +243,15 @@
 
 		 	var hash = this.hash,
 		 			navToggler = $('.navbar-toggler');
-		 	$('html, body').animate({
-		    scrollTop: $(hash).offset().top
-		  }, 700, 'easeInOutExpo', function(){
-		    window.location.hash = hash;
-		  });
+		 	
+		 	// Check if target exists before scrolling
+		 	if ($(hash).length > 0) {
+			 	$('html, body').animate({
+			    scrollTop: $(hash).offset().top
+			  }, 700, 'easeInOutExpo', function(){
+			    window.location.hash = hash;
+			  });
+		 	}
 
 
 		  if ( navToggler.is(':visible') ) {
@@ -305,14 +309,21 @@
 			
 			event.preventDefault();
 
-			$('html,body').animate({
-				scrollTop: $('.goto-here').offset().top
-			}, 500, 'easeInOutExpo');
+			// Only animate if .goto-here section exists
+			if ($('.goto-here').length > 0) {
+				$('html,body').animate({
+					scrollTop: $('.goto-here').offset().top
+				}, 500, 'easeInOutExpo');
+			}
 			
 			return false;
 		});
 	};
-	goHere();
+	
+	// Only enable goHere on desktop, not on mobile
+	if (!isMobile.any()) {
+		goHere();
+	}
 
 
 })(jQuery);
