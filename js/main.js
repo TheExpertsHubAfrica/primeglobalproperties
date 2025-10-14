@@ -305,8 +305,16 @@
 			
 			event.preventDefault();
 
-			// Check if goto-here section exists before scrolling
-			if ($('.goto-here').length > 0) {
+			// Get the href attribute to determine scroll target
+			var target = $(this).attr('href');
+			
+			if (target && $(target).length > 0) {
+				// Scroll to the element specified in href
+				$('html,body').animate({
+					scrollTop: $(target).offset().top
+				}, 500, 'easeInOutExpo');
+			} else if ($('.goto-here').length > 0) {
+				// Fallback to goto-here section if no valid href
 				$('html,body').animate({
 					scrollTop: $('.goto-here').offset().top
 				}, 500, 'easeInOutExpo');
