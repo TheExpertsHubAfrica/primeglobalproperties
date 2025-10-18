@@ -29,13 +29,20 @@
 	};
 
 
+	// Disable stellar parallax for hero-wrap with video background
+	$('.hero-wrap:has(video)').removeAttr('data-stellar-background-ratio');
+	
 	$(window).stellar({
     responsive: true,
     parallaxBackgrounds: true,
     parallaxElements: true,
     horizontalScrolling: false,
     hideDistantElements: false,
-    scrollProperty: 'scroll'
+    scrollProperty: 'scroll',
+    // Exclude video backgrounds from parallax
+    hideElement: function($elem) {
+      return $elem.closest('.hero-wrap').find('video').length > 0;
+    }
   });
 
 
@@ -59,8 +66,8 @@
 	};
 	loader();
 
-	// Scrollax
-   $.Scrollax();
+	// Disable Scrollax for better compatibility with video background
+	// $.Scrollax();
 
 	var carousel = function() {
 		$('.carousel-testimony').owlCarousel({
@@ -243,12 +250,18 @@
 
 		 	var hash = this.hash,
 		 			navToggler = $('.navbar-toggler');
-		 	$('html, body').animate({
-		    scrollTop: $(hash).offset().top
-		  }, 700, 'easeInOutExpo', function(){
-		    window.location.hash = hash;
-		  });
-
+		 	
+		 	// Check if target exists
+		 	if ($(hash).length > 0) {
+			 	// Stop any ongoing animations
+			 	$('html, body').stop(true, false);
+			 	
+			 	$('html, body').animate({
+			    scrollTop: $(hash).offset().top
+			  }, 700, 'easeInOutExpo', function(){
+			    // window.location.hash = hash; // Commented to prevent scroll jump
+			  });
+		  }
 
 		  if ( navToggler.is(':visible') ) {
 		  	navToggler.click();
@@ -304,20 +317,19 @@
 		$('.mouse-icon').on('click', function(event){
 			
 			event.preventDefault();
+			event.stopPropagation();
 
 			// Get the href attribute to determine scroll target
 			var target = $(this).attr('href');
 			
-			if (target && $(target).length > 0) {
+			if (target && target !== '#' && $(target).length > 0) {
+				// Stop any ongoing animations
+				$('html, body').stop(true, false);
+				
 				// Scroll to the element specified in href
-				$('html,body').animate({
+				$('html, body').animate({
 					scrollTop: $(target).offset().top
-				}, 500, 'easeInOutExpo');
-			} else if ($('.goto-here').length > 0) {
-				// Fallback to goto-here section if no valid href
-				$('html,body').animate({
-					scrollTop: $('.goto-here').offset().top
-				}, 500, 'easeInOutExpo');
+				}, 700, 'easeInOutExpo');
 			}
 			
 			return false;
