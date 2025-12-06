@@ -77,7 +77,7 @@
       </div>
     </section>
 
-		<section class="ftco-section">
+	<section class="ftco-section">
     	<div class="container">
     	  <div class="row justify-content-center mb-5">
           <div class="col-md-12 heading-section text-center ftco-animate">
@@ -85,6 +85,50 @@
             <h2 class="mb-2">Featured Properties For Sale</h2>
           </div>
         </div>
+        <!-- Skeleton Loader for Houses -->
+        <div class="row" id="houses-skeleton" style="display: flex;">
+          <div class="col-md-4" style="margin-bottom: 30px;">
+            <div class="property-wrap" style="background: #fff; border-radius: 4px; overflow: hidden;">
+              <div style="width: 100%; height: 400px; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"></div>
+              <div style="padding: 20px;">
+                <div style="height: 24px; width: 70%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 15px;"></div>
+                <div style="height: 16px; width: 50%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 10px;"></div>
+                <div style="height: 16px; width: 90%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 10px;"></div>
+                <div style="height: 16px; width: 60%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" style="margin-bottom: 30px;">
+            <div class="property-wrap" style="background: #fff; border-radius: 4px; overflow: hidden;">
+              <div style="width: 100%; height: 400px; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"></div>
+              <div style="padding: 20px;">
+                <div style="height: 24px; width: 70%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 15px;"></div>
+                <div style="height: 16px; width: 50%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 10px;"></div>
+                <div style="height: 16px; width: 90%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 10px;"></div>
+                <div style="height: 16px; width: 60%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" style="margin-bottom: 30px;">
+            <div class="property-wrap" style="background: #fff; border-radius: 4px; overflow: hidden;">
+              <div style="width: 100%; height: 400px; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"></div>
+              <div style="padding: 20px;">
+                <div style="height: 24px; width: 70%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 15px;"></div>
+                <div style="height: 16px; width: 50%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 10px;"></div>
+                <div style="height: 16px; width: 90%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 10px;"></div>
+                <div style="height: 16px; width: 60%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Dynamic Houses Container -->
+        <div class="row" id="houses-container" style="display: none;">
+          <!-- Houses will be loaded dynamically here -->
+        </div>
+        
+        <!-- Fallback: Static houses (shown if JavaScript fails) -->
+        <noscript>
         <div class="row">
         	<!-- 4 Bedroom House - Community 26 -->
         	<div class="col-md-4">
@@ -201,6 +245,7 @@
         		</div>
         	</div>
         </div>
+        </noscript>
 
         <!-- Land Listings Section -->
         <div class="row justify-content-center mt-5 mb-4">
@@ -210,6 +255,47 @@
           </div>
         </div>
         
+        <!-- Skeleton Loader for Land -->
+        <div class="row" id="land-skeleton" style="display: flex;">
+          <div class="col-md-4" style="margin-bottom: 30px;">
+            <div class="property-wrap" style="background: #fff; border-radius: 4px; overflow: hidden;">
+              <div style="width: 100%; height: 400px; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"></div>
+              <div style="padding: 20px;">
+                <div style="height: 24px; width: 70%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 15px;"></div>
+                <div style="height: 16px; width: 50%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 10px;"></div>
+                <div style="height: 16px; width: 90%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" style="margin-bottom: 30px;">
+            <div class="property-wrap" style="background: #fff; border-radius: 4px; overflow: hidden;">
+              <div style="width: 100%; height: 400px; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"></div>
+              <div style="padding: 20px;">
+                <div style="height: 24px; width: 70%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 15px;"></div>
+                <div style="height: 16px; width: 50%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 10px;"></div>
+                <div style="height: 16px; width: 90%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" style="margin-bottom: 30px;">
+            <div class="property-wrap" style="background: #fff; border-radius: 4px; overflow: hidden;">
+              <div style="width: 100%; height: 400px; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite;"></div>
+              <div style="padding: 20px;">
+                <div style="height: 24px; width: 70%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 15px;"></div>
+                <div style="height: 16px; width: 50%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 10px;"></div>
+                <div style="height: 16px; width: 90%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Dynamic Land Container -->
+        <div class="row" id="land-container" style="display: none;">
+          <!-- Land plots will be loaded dynamically here -->
+        </div>
+        
+        <!-- Fallback: Static land plots (shown if JavaScript fails) -->
+        <noscript>
         <div class="row">
         	<div class="col-md-4">
         		<div class="property-wrap ftco-animate">
@@ -275,9 +361,10 @@
         		</div>
         	</div>
         </div>
+        </noscript>
 
-        Old Property Listings - Commented Out
-        <div class="row">
+        <!-- Old Property Listings - Commented Out -->
+        <!-- <div class="row">
         	<div class="col-md-4">
         		<div class="property-wrap ftco-animate">
         			<a href="properties-single.html" class="img" style="background-image: url(images/work-1.jpg);"></a>
@@ -442,7 +529,7 @@
         			</div>
         		</div>
         	</div>
-        </div>
+        </div> -->
         <div class="row mt-5">
           <div class="col text-center">
             <div class="block-27">
@@ -555,8 +642,20 @@
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>
   
+  <!-- Dynamic Property Loading -->
+  <script src="js/properties-loader.js"></script>
+  
   <!-- Property Carousel Script -->
   <style>
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+    
     .carousel-slide {
       display: none;
       position: absolute;

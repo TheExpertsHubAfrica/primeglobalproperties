@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin Panel - Prime Global Properties</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="robots" content="noindex, nofollow">
+    
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin-panel.css">
+</head>
+<body>
+    
+    <!-- Login Section -->
+    <div id="login-section" class="login-wrapper">
+        <div class="login-container">
+            <div class="login-header">
+                <img src="images/pglobal logo.png" alt="Prime Global Properties" class="login-logo">
+                <h2>Admin Panel</h2>
+                <p>Property Management System</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="alert alert-danger" id="login-error" style="display: none;"></div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="login-btn">
+                    <span class="btn-text">Login</span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="dashboard-wrapper" style="display: none;">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <img src="images/pglobal logo.png" alt="Prime Global Properties" style="height: 40px;">
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <span class="admin-welcome">Welcome, <strong id="admin-username"></strong></span>
+                        <button class="btn btn-sm btn-danger ml-3" id="logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <div class="container-fluid">
+                
+                <!-- Tabs Navigation -->
+                <ul class="nav nav-tabs dashboard-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="houses-tab" data-toggle="tab" href="#houses" role="tab">
+                            Houses <span class="badge badge-primary" id="houses-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="land-tab" data-toggle="tab" href="#land" role="tab">
+                            Land Plots <span class="badge badge-primary" id="land-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="myTabContent">
+                    
+                    <!-- Houses Tab -->
+                    <div class="tab-pane fade show active" id="houses" role="tabpanel">
+                        <div class="section-header">
+                            <h3>House Listings</h3>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#addHouseModal">
+                                + Add New House
+                            </button>
+                        </div>
+
+                        <!-- Loading Skeleton -->
+                        <div id="houses-skeleton" class="listings-skeleton">
+                            <div class="skeleton-card">
+                                <div class="skeleton-image"></div>
+                                <div class="skeleton-content">
+                                    <div class="skeleton-line skeleton-title"></div>
+                                    <div class="skeleton-line"></div>
+                                    <div class="skeleton-line"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-card">
+                                <div class="skeleton-image"></div>
+                                <div class="skeleton-content">
+                                    <div class="skeleton-line skeleton-title"></div>
+                                    <div class="skeleton-line"></div>
+                                    <div class="skeleton-line"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-card">
+                                <div class="skeleton-image"></div>
+                                <div class="skeleton-content">
+                                    <div class="skeleton-line skeleton-title"></div>
+                                    <div class="skeleton-line"></div>
+                                    <div class="skeleton-line"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Listings Grid -->
+                        <div id="houses-grid" class="listings-grid" style="display: none;">
+                            <!-- Dynamic content will be loaded here -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="houses-empty" class="empty-state" style="display: none;">
+                            <i class="icon-home"></i>
+                            <h4>No Houses Listed</h4>
+                            <p>Click "Add New House" to create your first listing</p>
+                        </div>
+                    </div>
+
+                    <!-- Land Tab -->
+                    <div class="tab-pane fade" id="land" role="tabpanel">
+                        <div class="section-header">
+                            <h3>Land Plot Listings</h3>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#addLandModal">
+                                + Add New Land Plot
+                            </button>
+                        </div>
+
+                        <!-- Loading Skeleton -->
+                        <div id="land-skeleton" class="listings-skeleton">
+                            <div class="skeleton-card">
+                                <div class="skeleton-image"></div>
+                                <div class="skeleton-content">
+                                    <div class="skeleton-line skeleton-title"></div>
+                                    <div class="skeleton-line"></div>
+                                    <div class="skeleton-line"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-card">
+                                <div class="skeleton-image"></div>
+                                <div class="skeleton-content">
+                                    <div class="skeleton-line skeleton-title"></div>
+                                    <div class="skeleton-line"></div>
+                                    <div class="skeleton-line"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-card">
+                                <div class="skeleton-image"></div>
+                                <div class="skeleton-content">
+                                    <div class="skeleton-line skeleton-title"></div>
+                                    <div class="skeleton-line"></div>
+                                    <div class="skeleton-line"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Listings Grid -->
+                        <div id="land-grid" class="listings-grid" style="display: none;">
+                            <!-- Dynamic content will be loaded here -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="land-empty" class="empty-state" style="display: none;">
+                            <i class="icon-map"></i>
+                            <h4>No Land Plots Listed</h4>
+                            <p>Click "Add New Land Plot" to create your first listing</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add House Modal -->
+    <div class="modal fade" id="addHouseModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New House Listing</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <form id="add-house-form">
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            <strong>Note:</strong> Upload images to your server/hosting first, then provide the image URLs below.
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label>Property Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="title" placeholder="e.g., 4 Bedroom House - Community 26" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Location <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="location" placeholder="e.g., Tema" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Price (GHS) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="price" placeholder="e.g., 950000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label>Bedrooms <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="bedrooms" placeholder="e.g., 4" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Bathrooms <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="bathrooms" placeholder="e.g., 3" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Square Feet</label>
+                                <input type="number" class="form-control" name="sqft" placeholder="e.g., 2500">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" name="description" rows="3" placeholder="Brief description of the property..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Image URLs <span class="text-danger">*</span></label>
+                            <small class="form-text text-muted mb-2">Enter image URLs, one per line (minimum 1, recommended 3-5)</small>
+                            <textarea class="form-control" name="images" rows="5" placeholder="images/house1-1.jpg&#10;images/house1-2.jpg&#10;images/house1-3.jpg" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="featured">
+                                <span class="custom-control-label">Feature on Homepage</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-text">Add Listing</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Land Modal -->
+    <div class="modal fade" id="addLandModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Land Plot Listing</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <form id="add-land-form">
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            <strong>Note:</strong> Upload images to your server/hosting first, then provide the image URL below.
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label>Property Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="title" placeholder="e.g., Plot at Tsopoli" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Location <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="location" placeholder="e.g., Tsopoli" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Price (GHS) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="price" placeholder="e.g., 12500" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Plot Size <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="plotSize" placeholder="e.g., 70 x 100" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Total Area (sq ft)</label>
+                                <input type="number" class="form-control" name="area" placeholder="e.g., 7000">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" name="description" rows="3" placeholder="Brief description of the land..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Image URL <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="image" placeholder="images/land1.jpg" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="featured">
+                                <span class="custom-control-label">Feature on Homepage</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-text">Add Listing</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit House Modal -->
+    <div class="modal fade" id="editHouseModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit House Listing</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <form id="edit-house-form">
+                    <input type="hidden" name="id" id="edit-house-id">
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label>Property Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="title" id="edit-house-title" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Location <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="location" id="edit-house-location" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Price (GHS) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="price" id="edit-house-price" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label>Bedrooms <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="bedrooms" id="edit-house-bedrooms" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Bathrooms <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="bathrooms" id="edit-house-bathrooms" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Square Feet</label>
+                                <input type="number" class="form-control" name="sqft" id="edit-house-sqft">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" name="description" id="edit-house-description" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Image URLs <span class="text-danger">*</span></label>
+                            <small class="form-text text-muted mb-2">Enter image URLs, one per line</small>
+                            <textarea class="form-control" name="images" id="edit-house-images" rows="5" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="featured" id="edit-house-featured">
+                                <span class="custom-control-label">Feature on Homepage</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-text">Save Changes</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Land Modal -->
+    <div class="modal fade" id="editLandModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Land Plot Listing</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <form id="edit-land-form">
+                    <input type="hidden" name="id" id="edit-land-id">
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label>Property Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="title" id="edit-land-title" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Location <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="location" id="edit-land-location" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Price (GHS) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="price" id="edit-land-price" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Plot Size <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="plotSize" id="edit-land-plotSize" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Total Area (sq ft)</label>
+                                <input type="number" class="form-control" name="area" id="edit-land-area">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" name="description" id="edit-land-description" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Image URL <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="image" id="edit-land-image" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="featured" id="edit-land-featured">
+                                <span class="custom-control-label">Feature on Homepage</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-text">Save Changes</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="toast-container">
+        <div id="success-toast" class="toast" role="alert">
+            <div class="toast-body">
+                <i class="icon-check"></i>
+                <span id="toast-message"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/admin-panel.js"></script>
+    
+</body>
+</html>

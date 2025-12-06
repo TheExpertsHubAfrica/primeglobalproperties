@@ -215,6 +215,62 @@
           color: #000 !important;
         }
       }
+      
+      /* Skeleton Loader Styles for Homepage */
+      .homepage-skeleton {
+        display: none;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      
+      .skeleton-property-card {
+        flex: 0 0 calc(33.333% - 14px);
+        background: #fff;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      
+      .skeleton-image {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+      
+      .skeleton-content {
+        padding: 20px;
+      }
+      
+      .skeleton-line {
+        height: 20px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+      
+      .skeleton-line.short {
+        width: 60%;
+      }
+      
+      .skeleton-line.medium {
+        width: 80%;
+      }
+      
+      @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+      
+      @media (max-width: 768px) {
+        .skeleton-property-card {
+          flex: 0 0 100%;
+        }
+      }
     </style>
   </head>
   <body>
@@ -352,7 +408,37 @@
             <h2 class="mb-2">Premium Houses For Sale</h2>
           </div>
         </div>
-        <div class="row">
+        
+        <!-- Houses Skeleton Loader -->
+        <div id="houses-skeleton" class="homepage-skeleton">
+          <div class="skeleton-property-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line medium"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+          <div class="skeleton-property-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line medium"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+          <div class="skeleton-property-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line medium"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Dynamic Houses Container -->
+        <div class="row" id="featured-houses-container">
         	<!-- 4 Bedroom House - Community 26 -->
         	<div class="col-md-4">
         		<div class="property-wrap ftco-animate">
@@ -476,7 +562,37 @@
             <h2 class="mb-2">Exclusive Land Offers For You</h2>
           </div>
         </div>
-        <div class="row">
+        
+        <!-- Land Skeleton Loader -->
+        <div id="land-skeleton" class="homepage-skeleton">
+          <div class="skeleton-property-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line medium"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+          <div class="skeleton-property-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line medium"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+          <div class="skeleton-property-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line medium"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Dynamic Land Container -->
+        <div class="row" id="featured-land-container">
         	<div class="col-md-4">
         		<div class="property-wrap ftco-animate">
         			<a href="index.html#request-form" class="img" style="background-image: url('images/tsopoli 70 x 100 12500.JPG'); height: 400px; background-size: cover; background-position: center;"></a>
@@ -1010,6 +1126,9 @@
       });
     });
   </script>
+  
+  <!-- Homepage Featured Properties Dynamic Loader -->
+  <script src="js/homepage-loader.js"></script>
     
   </body>
 </html>
