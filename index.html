@@ -1047,12 +1047,29 @@
       position: relative;
     }
     
-    .carousel-control:hover {
+    .carousel-prev:hover,
+    .carousel-next:hover {
       background: rgba(0,0,0,0.8) !important;
+      transform: translateY(-50%) scale(1.1);
     }
     
     .property-carousel {
       position: relative;
+    }
+    
+    /* Improve image loading from Google Drive */
+    .property-wrap .img {
+      background-color: #f0f0f0;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    
+    /* Featured badge styling */
+    .status {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
   </style>
   

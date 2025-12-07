@@ -538,7 +538,7 @@ function generateToken(username) {
  */
 function sendLoginNotification(username) {
   try {
-    const subject = '🔐 Admin Panel Login Notification - Prime Global Properties';
+    const subject = 'Admin Panel Login Notification - Prime Global Properties';
     const timestamp = new Date().toLocaleString('en-US', {
       timeZone: 'Africa/Accra',
       dateStyle: 'full',
@@ -610,7 +610,7 @@ function sendLoginNotification(username) {
 <body>
   <div class="email-container">
     <div class="header">
-      <h1>🔐 Admin Panel Login Alert</h1>
+      <h1>&#128274; Admin Panel Login Alert</h1>
     </div>
     
     <div class="content">
@@ -620,7 +620,7 @@ function sendLoginNotification(username) {
       </p>
       
       <div class="alert-box">
-        <strong>⚠️ Security Notice:</strong> If this wasn't you, please contact your system administrator immediately.
+        <strong>&#9888;&#65039; Security Notice:</strong> If this wasn't you, please contact your system administrator immediately.
       </div>
       
       <h3 style="color: #F96D00; margin-top: 30px;">Login Details:</h3>
@@ -861,23 +861,36 @@ function sendListingNotification(action, type, data) {
  */
 function handleImageUpload(data) {
   try {
-    const { imageData, fileName, mimeType } = data;
+    const { imageData, fileName, mimeType, propertyId } = data;
     
     if (!imageData || !fileName) {
       return createResponse(false, 'Image data and filename are required');
     }
     
-    // Get or create the images folder in Google Drive
+    // Get or create the main images folder in Google Drive
     const folderName = CONFIG.IMAGES_FOLDER_NAME || 'Prime Properties Images';
-    let folder;
+    let mainFolder;
     
     const folders = DriveApp.getFoldersByName(folderName);
     if (folders.hasNext()) {
-      folder = folders.next();
+      mainFolder = folders.next();
     } else {
-      folder = DriveApp.createFolder(folderName);
+      mainFolder = DriveApp.createFolder(folderName);
       // Make folder publicly accessible
-      folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      mainFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    }
+    
+    // Create property-specific subfolder if propertyId is provided
+    let folder = mainFolder;
+    if (propertyId) {
+      const subFolderName = 'Property-' + propertyId;
+      const subFolders = mainFolder.getFoldersByName(subFolderName);
+      if (subFolders.hasNext()) {
+        folder = subFolders.next();
+      } else {
+        folder = mainFolder.createFolder(subFolderName);
+        folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      }
     }
     
     // Remove base64 prefix if present

@@ -5,7 +5,7 @@
 
 // Configuration
 const CONFIG = {
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwEvIZ4MVS8qWuilYPxcAs1lfuS4ll6EImK3G52FRR-Owm2wIn5o-y8obqu1XNoY7-4QQ/exec', // Replace after deployment
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxNvkCfkuHemDo5DgoIpYKj1YmsUM3vlK5YLNqdfE2Irf2RoUY8MNV9ZItuBYPGjiVD/exec', // Replace after deployment
   SESSION_KEY: 'pgp_admin_session'
 };
 
@@ -87,6 +87,27 @@ function setupEventListeners() {
     editLandForm.addEventListener('submit', handleEditLand);
   }
   
+  // Image upload previews
+  const houseImagesInput = document.getElementById('house-images');
+  if (houseImagesInput) {
+    houseImagesInput.addEventListener('change', (e) => handleImagePreview(e, 'house-image-preview', true));
+  }
+  
+  const landImageInput = document.getElementById('land-image');
+  if (landImageInput) {
+    landImageInput.addEventListener('change', (e) => handleImagePreview(e, 'land-image-preview', false));
+  }
+  
+  const editHouseImagesInput = document.getElementById('edit-house-images-input');
+  if (editHouseImagesInput) {
+    editHouseImagesInput.addEventListener('change', (e) => handleImagePreview(e, 'edit-house-image-preview', true));
+  }
+  
+  const editLandImageInput = document.getElementById('edit-land-image-input');
+  if (editLandImageInput) {
+    editLandImageInput.addEventListener('change', (e) => handleImagePreview(e, 'edit-land-image-preview', false));
+  }
+  
   // Tab change event
   $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     const target = $(e.target).attr('href');
@@ -94,6 +115,125 @@ function setupEventListeners() {
       // Load land data if not already loaded
       loadListings('land');
     }
+  });
+}
+
+/**
+ * Handle image preview
+ */
+function handleImagePreview(event, previewContainerId, multiple) {
+  const files = event.target.files;
+  const container = document.getElementById(previewContainerId);
+  
+  if (!container) return;
+  
+  // Clear previous previews
+  container.innerHTML = '';
+  
+  // Validate and preview each file
+  Array.from(files).forEach((file, index) => {
+    // Validate file type
+    if (!file.type.match('image/(jpeg|png|webp)')) {
+      alert(`${file.name} is not a valid image format. Please use JPG, PNG, or WebP.`);
+      return;
+    }
+    
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      alert(`${file.name} is too large. Maximum file size is 5MB.`);
+      return;
+    }
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const previewItem = document.createElement('div');
+      previewItem.className = 'image-preview-item';
+      previewItem.innerHTML = `
+        <img src="${e.target.result}" alt="Preview ${index + 1}">
+        <button type="button" class="image-preview-remove" onclick="removeImagePreview(this, '${event.target.id}', ${index})">&times;</button>
+      `;
+      container.appendChild(previewItem);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Remove image from preview
+ */
+function removeImagePreview(button, inputId, index) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  
+  // Create a new FileList without the removed file
+  const dt = new DataTransfer();
+  const files = input.files;
+  
+  Array.from(files).forEach((file, i) => {
+    if (i !== index) {
+      dt.items.add(file);
+    }
+  });
+  
+  input.files = dt.files;
+  
+  // Remove preview item
+  button.closest('.image-preview-item').remove();
+}
+
+/**
+ * Upload images to Google Drive
+ */
+async function uploadImages(files, propertyId) {
+  const uploadedUrls = [];
+  
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    
+    try {
+      // Convert to base64
+      const base64 = await fileToBase64(file);
+      
+      // Upload to Google Drive
+      const formData = new FormData();
+      formData.append('action', 'uploadImage');
+      formData.append('imageData', base64);
+      formData.append('fileName', `${propertyId}_${i + 1}_${file.name}`);
+      formData.append('mimeType', file.type);
+      formData.append('propertyId', propertyId);
+      
+      const response = await fetch(CONFIG.SCRIPT_URL, {
+        method: 'POST',
+        body: formData
+      });
+      
+      const data = await response.json();
+      
+      if (data.status === 'success' && data.imageUrl) {
+        uploadedUrls.push(data.imageUrl);
+      } else {
+        throw new Error(data.message || 'Upload failed');
+      }
+      
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw new Error(`Failed to upload ${file.name}: ${error.message}`);
+    }
+  }
+  
+  return uploadedUrls;
+}
+
+/**
+ * Convert file to base64
+ */
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
   });
 }
 
@@ -281,14 +421,15 @@ function renderListings(type, listings) {
  */
 function renderHouseCard(house) {
   const images = house.images ? house.images.split('\n').filter(img => img.trim()) : [];
-  const firstImage = images[0] || 'images/placeholder.jpg';
+  const firstImage = images[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
   const isHidden = house.visible === 'No';
+  const placeholderSvg = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
   
   return `
     <div class="listing-card ${isHidden ? 'hidden' : ''}">
       ${house.featured === 'Yes' ? '<div class="listing-badge">Featured</div>' : ''}
       ${isHidden ? '<div class="listing-badge hidden-badge">Hidden</div>' : ''}
-      <img src="${firstImage}" alt="${house.title}" class="listing-image" onerror="this.src='images/placeholder.jpg'">
+      <img src="${firstImage}" alt="${house.title}" class="listing-image" onerror="this.onerror=null; this.src='${placeholderSvg}'; console.error('Failed to load image:', '${firstImage}');" crossorigin="anonymous">
       <div class="listing-content">
         <h4 class="listing-title">${house.title}</h4>
         <p class="listing-location">
@@ -329,12 +470,14 @@ function renderHouseCard(house) {
  */
 function renderLandCard(land) {
   const isHidden = land.visible === 'No';
+  const landImage = land.image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
+  const placeholderSvg = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
   
   return `
     <div class="listing-card ${isHidden ? 'hidden' : ''}">
       ${land.featured === 'Yes' ? '<div class="listing-badge">Featured</div>' : ''}
       ${isHidden ? '<div class="listing-badge hidden-badge">Hidden</div>' : ''}
-      <img src="${land.image}" alt="${land.title}" class="listing-image" onerror="this.src='images/placeholder.jpg'">
+      <img src="${landImage}" alt="${land.title}" class="listing-image" onerror="this.onerror=null; this.src='${placeholderSvg}'; console.error('Failed to load image:', '${landImage}');" crossorigin="anonymous">
       <div class="listing-content">
         <h4 class="listing-title">${land.title}</h4>
         <p class="listing-location">
@@ -375,25 +518,43 @@ async function handleAddHouse(e) {
   
   const form = e.target;
   const btn = form.querySelector('button[type="submit"]');
-  
-  // Get form data
   const formData = new FormData(form);
-  const listingData = {
-    title: formData.get('title'),
-    location: formData.get('location'),
-    price: formData.get('price'),
-    bedrooms: formData.get('bedrooms'),
-    bathrooms: formData.get('bathrooms'),
-    sqft: formData.get('sqft') || '',
-    description: formData.get('description') || '',
-    images: formData.get('images'),
-    featured: formData.get('featured') === 'on'
-  };
+  
+  // Get image files
+  const imageFiles = document.getElementById('house-images').files;
+  
+  if (imageFiles.length === 0) {
+    alert('Please select at least one image for the property.');
+    return;
+  }
   
   // Show loading
   setButtonLoading(btn, true);
   
   try {
+    // Generate a temporary property ID for image upload
+    const tempPropertyId = 'TEMP-' + Date.now();
+    
+    // Upload images first
+    const imageUrls = await uploadImages(imageFiles, tempPropertyId);
+    
+    if (imageUrls.length === 0) {
+      throw new Error('No images were uploaded successfully');
+    }
+    
+    // Prepare listing data with uploaded image URLs
+    const listingData = {
+      title: formData.get('title'),
+      location: formData.get('location'),
+      price: formData.get('price'),
+      bedrooms: formData.get('bedrooms'),
+      bathrooms: formData.get('bathrooms'),
+      sqft: formData.get('sqft') || '',
+      description: formData.get('description') || '',
+      images: imageUrls.join('\n'), // Store as newline-separated URLs
+      featured: formData.get('featured') === 'on'
+    };
+    
     // Create FormData to avoid CORS preflight
     const apiFormData = new FormData();
     apiFormData.append('action', 'addListing');
@@ -411,8 +572,9 @@ async function handleAddHouse(e) {
       // Close modal
       $('#addHouseModal').modal('hide');
       
-      // Reset form
+      // Reset form and clear preview
       form.reset();
+      document.getElementById('house-image-preview').innerHTML = '';
       
       // Show success message
       showToast('House listing added successfully!');
@@ -425,7 +587,7 @@ async function handleAddHouse(e) {
     
   } catch (error) {
     console.error('Error adding house:', error);
-    alert('Connection error. Please try again.');
+    alert('Error: ' + error.message);
   } finally {
     setButtonLoading(btn, false);
   }
@@ -439,24 +601,42 @@ async function handleAddLand(e) {
   
   const form = e.target;
   const btn = form.querySelector('button[type="submit"]');
-  
-  // Get form data
   const formData = new FormData(form);
-  const listingData = {
-    title: formData.get('title'),
-    location: formData.get('location'),
-    price: formData.get('price'),
-    plotSize: formData.get('plotSize'),
-    area: formData.get('area') || '',
-    description: formData.get('description') || '',
-    image: formData.get('image'),
-    featured: formData.get('featured') === 'on'
-  };
+  
+  // Get image file
+  const imageFile = document.getElementById('land-image').files[0];
+  
+  if (!imageFile) {
+    alert('Please select an image for the land plot.');
+    return;
+  }
   
   // Show loading
   setButtonLoading(btn, true);
   
   try {
+    // Generate a temporary property ID for image upload
+    const tempPropertyId = 'TEMP-' + Date.now();
+    
+    // Upload image
+    const imageUrls = await uploadImages([imageFile], tempPropertyId);
+    
+    if (imageUrls.length === 0) {
+      throw new Error('Image upload failed');
+    }
+    
+    // Prepare listing data with uploaded image URL
+    const listingData = {
+      title: formData.get('title'),
+      location: formData.get('location'),
+      price: formData.get('price'),
+      plotSize: formData.get('plotSize'),
+      area: formData.get('area') || '',
+      description: formData.get('description') || '',
+      image: imageUrls[0], // Single image URL
+      featured: formData.get('featured') === 'on'
+    };
+    
     // Create FormData to avoid CORS preflight
     const apiFormData = new FormData();
     apiFormData.append('action', 'addListing');
@@ -474,8 +654,9 @@ async function handleAddLand(e) {
       // Close modal
       $('#addLandModal').modal('hide');
       
-      // Reset form
+      // Reset form and clear preview
       form.reset();
+      document.getElementById('land-image-preview').innerHTML = '';
       
       // Show success message
       showToast('Land listing added successfully!');
@@ -488,7 +669,7 @@ async function handleAddLand(e) {
     
   } catch (error) {
     console.error('Error adding land:', error);
-    alert('Connection error. Please try again.');
+    alert('Error: ' + error.message);
   } finally {
     setButtonLoading(btn, false);
   }
@@ -513,8 +694,27 @@ function editHouse(id) {
   document.getElementById('edit-house-bathrooms').value = house.bathrooms;
   document.getElementById('edit-house-sqft').value = house.sqft || '';
   document.getElementById('edit-house-description').value = house.description || '';
-  document.getElementById('edit-house-images').value = house.images || '';
   document.getElementById('edit-house-featured').checked = house.featured === 'Yes';
+  
+  // Show current images in preview
+  const previewContainer = document.getElementById('edit-house-image-preview');
+  previewContainer.innerHTML = '';
+  
+  if (house.images) {
+    const imageUrls = house.images.split('\n').filter(url => url.trim());
+    imageUrls.forEach((url, index) => {
+      const previewItem = document.createElement('div');
+      previewItem.className = 'image-preview-item';
+      previewItem.innerHTML = `
+        <img src="${url}" alt="Current Image ${index + 1}">
+        <small style="position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.7); color: white; padding: 2px 5px; font-size: 10px; border-radius: 3px;">Current</small>
+      `;
+      previewContainer.appendChild(previewItem);
+    });
+  }
+  
+  // Clear file input
+  document.getElementById('edit-house-images-input').value = '';
   
   // Show modal
   $('#editHouseModal').modal('show');
@@ -538,8 +738,24 @@ function editLand(id) {
   document.getElementById('edit-land-plotSize').value = land.plotsize || land.plotSize;
   document.getElementById('edit-land-area').value = land.area || '';
   document.getElementById('edit-land-description').value = land.description || '';
-  document.getElementById('edit-land-image').value = land.image || '';
   document.getElementById('edit-land-featured').checked = land.featured === 'Yes';
+  
+  // Show current image in preview
+  const previewContainer = document.getElementById('edit-land-image-preview');
+  previewContainer.innerHTML = '';
+  
+  if (land.image) {
+    const previewItem = document.createElement('div');
+    previewItem.className = 'image-preview-item';
+    previewItem.innerHTML = `
+      <img src="${land.image}" alt="Current Image">
+      <small style="position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.7); color: white; padding: 2px 5px; font-size: 10px; border-radius: 3px;">Current</small>
+    `;
+    previewContainer.appendChild(previewItem);
+  }
+  
+  // Clear file input
+  document.getElementById('edit-land-image-input').value = '';
   
   // Show modal
   $('#editLandModal').modal('show');
@@ -553,27 +769,42 @@ async function handleEditHouse(e) {
   
   const form = e.target;
   const btn = form.querySelector('button[type="submit"]');
-  
-  // Get form data
   const formData = new FormData(form);
-  const listingData = {
-    title: formData.get('title'),
-    location: formData.get('location'),
-    price: formData.get('price'),
-    bedrooms: formData.get('bedrooms'),
-    bathrooms: formData.get('bathrooms'),
-    sqft: formData.get('sqft') || '',
-    description: formData.get('description') || '',
-    images: formData.get('images'),
-    featured: formData.get('featured') === 'on'
-  };
-  
   const listingId = formData.get('id');
   
   // Show loading
   setButtonLoading(btn, true);
   
   try {
+    // Check if new images were uploaded
+    const newImageFiles = document.getElementById('edit-house-images-input').files;
+    let imageUrls = null;
+    
+    if (newImageFiles.length > 0) {
+      // Upload new images
+      imageUrls = await uploadImages(newImageFiles, listingId);
+      if (imageUrls.length === 0) {
+        throw new Error('No images were uploaded successfully');
+      }
+    }
+    
+    // Get form data
+    const listingData = {
+      title: formData.get('title'),
+      location: formData.get('location'),
+      price: formData.get('price'),
+      bedrooms: formData.get('bedrooms'),
+      bathrooms: formData.get('bathrooms'),
+      sqft: formData.get('sqft') || '',
+      description: formData.get('description') || '',
+      featured: formData.get('featured') === 'on'
+    };
+    
+    // Only update images if new ones were uploaded
+    if (imageUrls) {
+      listingData.images = imageUrls.join('\n');
+    }
+    
     // Create FormData to avoid CORS preflight
     const apiFormData = new FormData();
     apiFormData.append('action', 'updateListing');
@@ -603,7 +834,7 @@ async function handleEditHouse(e) {
     
   } catch (error) {
     console.error('Error updating house:', error);
-    alert('Connection error. Please try again.');
+    alert('Error: ' + error.message);
   } finally {
     setButtonLoading(btn, false);
   }
@@ -617,26 +848,42 @@ async function handleEditLand(e) {
   
   const form = e.target;
   const btn = form.querySelector('button[type="submit"]');
-  
-  // Get form data
   const formData = new FormData(form);
-  const listingData = {
-    title: formData.get('title'),
-    location: formData.get('location'),
-    price: formData.get('price'),
-    plotSize: formData.get('plotSize'),
-    area: formData.get('area') || '',
-    description: formData.get('description') || '',
-    image: formData.get('image'),
-    featured: formData.get('featured') === 'on'
-  };
-  
   const listingId = formData.get('id');
   
   // Show loading
   setButtonLoading(btn, true);
   
   try {
+    // Check if new image was uploaded
+    const newImageFile = document.getElementById('edit-land-image-input').files[0];
+    let imageUrl = null;
+    
+    if (newImageFile) {
+      // Upload new image
+      const imageUrls = await uploadImages([newImageFile], listingId);
+      if (imageUrls.length === 0) {
+        throw new Error('Image upload failed');
+      }
+      imageUrl = imageUrls[0];
+    }
+    
+    // Get form data
+    const listingData = {
+      title: formData.get('title'),
+      location: formData.get('location'),
+      price: formData.get('price'),
+      plotSize: formData.get('plotSize'),
+      area: formData.get('area') || '',
+      description: formData.get('description') || '',
+      featured: formData.get('featured') === 'on'
+    };
+    
+    // Only update image if new one was uploaded
+    if (imageUrl) {
+      listingData.image = imageUrl;
+    }
+    
     // Create FormData to avoid CORS preflight
     const apiFormData = new FormData();
     apiFormData.append('action', 'updateListing');

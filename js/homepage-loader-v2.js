@@ -8,7 +8,7 @@
   
   // Configuration
   const CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbybSxH-UqnVZhKi_F_rgZDTXX19K0d2fxfeqjxsNdQNfGgE8vLOg3foXlomnY6ttFmjwA/exec',
+    API_URL: 'https://script.google.com/macros/s/AKfycbw3Su2OQ0M5fTmiR25iYDXsF3Q-rXEcdOjYTtwEBT3zTIgQ8Aljfa5ttwrmVe8gRQ1d-Q/exec',
     CACHE_KEY: 'pgp_homepage_v2',
     CACHE_DURATION: 5 * 60 * 1000, // 5 minutes
     MAX_FEATURED: 3
@@ -109,11 +109,12 @@
   function createHouseHTML(house) {
     const images = house.images ? house.images.split('\n').filter(img => img.trim()) : [];
     const hasMultipleImages = images.length > 1;
+    const mainImage = images[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
     
     return `
       <div class="col-md-4 ftco-animate">
         <div class="property-wrap">
-          ${hasMultipleImages ? createCarousel(images) : createSingleImage(images[0] || 'images/placeholder.jpg')}
+          ${hasMultipleImages ? createCarousel(images, house.featured === 'Yes') : createSingleImage(mainImage, house.featured === 'Yes')}
           <div class="text" style="padding: 25px;">
             <p class="price mb-3">
               <span style="color: #F96D00; font-size: 30px; font-weight: 700;">GHS ${Number(house.price || 0).toLocaleString()}</span>
@@ -142,10 +143,14 @@
   }
   
   function createLandHTML(land) {
+    const landImage = land.image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
+    const isFeatured = land.featured === 'Yes' || land.featured === true;
     return `
       <div class="col-md-4 ftco-animate">
         <div class="property-wrap">
-          <div class="img" style="background-image: url('${land.image || 'images/placeholder.jpg'}'); height: 400px; background-size: cover; background-position: center;"></div>
+          <div class="img" style="background-image: url('${landImage}'); height: 400px; background-size: cover; background-position: center; position: relative;">
+            ${isFeatured ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600;">FEATURED</span>' : ''}
+          </div>
           <div class="text" style="padding: 25px;">
             <p class="price mb-3">
               <span style="color: #F96D00; font-size: 30px; font-weight: 700;">GHS ${Number(land.price || 0).toLocaleString()}</span>
@@ -170,24 +175,29 @@
     `;
   }
   
-  function createCarousel(images) {
+  function createCarousel(images, isFeatured) {
     return `
       <div class="property-carousel" style="position: relative; height: 400px; overflow: hidden;">
         ${images.map((img, i) => `
           <div class="carousel-slide ${i === 0 ? 'active' : ''}" 
                style="background-image: url('${img.trim()}'); height: 400px; background-size: cover; background-position: center;">
+            ${isFeatured && i === 0 ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600; z-index: 5;">FEATURED</span>' : ''}
           </div>
         `).join('')}
         <button class="carousel-prev" onclick="moveCarouselSlide(this, -1)" 
-                style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; z-index: 10;">❮</button>
+                style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; z-index: 10; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px;">‹</button>
         <button class="carousel-next" onclick="moveCarouselSlide(this, 1)" 
-                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; z-index: 10;">❯</button>
+                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; z-index: 10; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px;">›</button>
       </div>
     `;
   }
   
-  function createSingleImage(image) {
-    return `<div class="img" style="background-image: url('${image}'); height: 400px; background-size: cover; background-position: center;"></div>`;
+  function createSingleImage(image, isFeatured) {
+    return `
+      <div class="img" style="background-image: url('${image}'); height: 400px; background-size: cover; background-position: center; position: relative;">
+        ${isFeatured ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600;">FEATURED</span>' : ''}
+      </div>
+    `;
   }
   
   function showSkeletons() {
