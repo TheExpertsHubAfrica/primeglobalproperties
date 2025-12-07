@@ -219,13 +219,13 @@ function hideSkeletonLoaders() {
   if (housesSkeleton) housesSkeleton.style.display = 'none';
   if (landSkeleton) landSkeleton.style.display = 'none';
   if (housesContainer) {
-    housesContainer.style.display = '';
+    housesContainer.style.removeProperty('display');
     housesContainer.style.visibility = 'visible';
     housesContainer.style.opacity = '1';
     console.log('Houses container display set to:', window.getComputedStyle(housesContainer).display);
   }
   if (landContainer) {
-    landContainer.style.display = '';
+    landContainer.style.removeProperty('display');
     landContainer.style.visibility = 'visible';
     landContainer.style.opacity = '1';
     console.log('Land container display set to:', window.getComputedStyle(landContainer).display);
