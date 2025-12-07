@@ -5,7 +5,7 @@
 
 // Configuration
 const CONFIG = {
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxNvkCfkuHemDo5DgoIpYKj1YmsUM3vlK5YLNqdfE2Irf2RoUY8MNV9ZItuBYPGjiVD/exec', // Replace after deployment
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw_5waGkgqb_sHB7aN0PLBwTgPbGW6vmboTPz8vNuI9weFwljD3DvF76bv7-8XfO7U-/exec', // Replace after deployment
   SESSION_KEY: 'pgp_admin_session'
 };
 
@@ -423,13 +423,12 @@ function renderHouseCard(house) {
   const images = house.images ? house.images.split('\n').filter(img => img.trim()) : [];
   const firstImage = images[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
   const isHidden = house.visible === 'No';
-  const placeholderSvg = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
   
   return `
     <div class="listing-card ${isHidden ? 'hidden' : ''}">
       ${house.featured === 'Yes' ? '<div class="listing-badge">Featured</div>' : ''}
       ${isHidden ? '<div class="listing-badge hidden-badge">Hidden</div>' : ''}
-      <img src="${firstImage}" alt="${house.title}" class="listing-image" onerror="this.onerror=null; this.src='${placeholderSvg}'; console.error('Failed to load image:', '${firstImage}');" crossorigin="anonymous">
+      <div class="listing-image" style="background-image: url('${firstImage}');"></div>
       <div class="listing-content">
         <h4 class="listing-title">${house.title}</h4>
         <p class="listing-location">
@@ -471,13 +470,12 @@ function renderHouseCard(house) {
 function renderLandCard(land) {
   const isHidden = land.visible === 'No';
   const landImage = land.image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
-  const placeholderSvg = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
   
   return `
     <div class="listing-card ${isHidden ? 'hidden' : ''}">
       ${land.featured === 'Yes' ? '<div class="listing-badge">Featured</div>' : ''}
       ${isHidden ? '<div class="listing-badge hidden-badge">Hidden</div>' : ''}
-      <img src="${landImage}" alt="${land.title}" class="listing-image" onerror="this.onerror=null; this.src='${placeholderSvg}'; console.error('Failed to load image:', '${landImage}');" crossorigin="anonymous">
+      <div class="listing-image" style="background-image: url('${landImage}');"></div>
       <div class="listing-content">
         <h4 class="listing-title">${land.title}</h4>
         <p class="listing-location">

@@ -912,8 +912,9 @@ function handleImageUpload(data) {
     // Make file publicly accessible
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     
-    // Get the file URL
-    const fileUrl = `https://drive.google.com/uc?export=view&id=${file.getId()}`;
+    // Get the file URL - using thumbnail API which works better with CORS
+    // Using size=s2000 for high quality display
+    const fileUrl = `https://drive.google.com/thumbnail?id=${file.getId()}&sz=w2000`;
     
     Logger.log('Image uploaded: ' + fileUrl);
     
