@@ -8,7 +8,7 @@
   
   // Configuration
   const CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbw3Su2OQ0M5fTmiR25iYDXsF3Q-rXEcdOjYTtwEBT3zTIgQ8Aljfa5ttwrmVe8gRQ1d-Q/exec',
+    API_URL: 'https://script.google.com/macros/s/AKfycbw_5waGkgqb_sHB7aN0PLBwTgPbGW6vmboTPz8vNuI9weFwljD3DvF76bv7-8XfO7U-/exec',
     CACHE_KEY: 'pgp_homepage_v2',
     CACHE_DURATION: 5 * 60 * 1000, // 5 minutes
     MAX_FEATURED: 3
@@ -56,22 +56,32 @@
       showSkeletons();
       
       // Fetch from API
-      console.log('Fetching from API');
-      const response = await fetch(`${CONFIG.API_URL}?action=getPublicListings&type=all&t=${Date.now()}`);
-      const data = await response.json();
+      const apiUrl = `${CONFIG.API_URL}?action=getPublicListings&type=all&t=${Date.now()}`;
+      console.log('Fetching from API:', apiUrl);
       
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      console.log('Response status:', response.status);
+      const data = await response.json();
       console.log('API Response:', data);
       
       if (data.status === 'success') {
-        setCache({ houses: data.houses, land: data.land });
-        displayFeatured(data.houses, data.land);
+        console.log('✅ Data loaded successfully');
+        setCache({ houses: data.houses || [], land: data.land || [] });
+        displayFeatured(data.houses || [], data.land || []);
       } else {
-        console.error('API Error:', data.message);
+        console.error('❌ API Error:', data.message);
         hideSkeletons();
       }
       
     } catch (error) {
-      console.error('Load Error:', error);
+      console.error('❌ Load Error:', error);
+      console.error('Error stack:', error.stack);
       hideSkeletons();
     }
   }
@@ -89,11 +99,19 @@
       .slice(0, CONFIG.MAX_FEATURED);
     
     console.log('Featured properties:', { houses: featuredHouses.length, land: featuredLand.length });
+    console.log('Containers:', { 
+      housesContainer: elements.housesContainer, 
+      landContainer: elements.landContainer 
+    });
     
     // Render houses
     if (featuredHouses.length > 0 && elements.housesContainer) {
-      elements.housesContainer.innerHTML = featuredHouses.map(house => createHouseHTML(house)).join('');
+      const htmlContent = featuredHouses.map(house => createHouseHTML(house)).join('');
+      console.log('Generated HTML length:', htmlContent.length);
+      console.log('First 500 chars:', htmlContent.substring(0, 500));
+      elements.housesContainer.innerHTML = htmlContent;
       console.log('✅ Featured houses rendered');
+      console.log('Container children count:', elements.housesContainer.children.length);
     }
     
     // Render land
@@ -112,7 +130,7 @@
     const mainImage = images[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
     
     return `
-      <div class="col-md-4 ftco-animate">
+      <div class="col-md-4" style="opacity: 1; visibility: visible;">
         <div class="property-wrap">
           ${hasMultipleImages ? createCarousel(images, house.featured === 'Yes') : createSingleImage(mainImage, house.featured === 'Yes')}
           <div class="text" style="padding: 25px;">
@@ -146,10 +164,10 @@
     const landImage = land.image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
     const isFeatured = land.featured === 'Yes' || land.featured === true;
     return `
-      <div class="col-md-4 ftco-animate">
+      <div class="col-md-4" style="opacity: 1; visibility: visible;">
         <div class="property-wrap">
           <div class="img" style="background-image: url('${landImage}'); height: 400px; background-size: cover; background-position: center; position: relative;">
-            ${isFeatured ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600;">FEATURED</span>' : ''}
+            ${isFeatured ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600; z-index: 2;">FEATURED</span>' : ''}
           </div>
           <div class="text" style="padding: 25px;">
             <p class="price mb-3">
@@ -180,14 +198,14 @@
       <div class="property-carousel" style="position: relative; height: 400px; overflow: hidden;">
         ${images.map((img, i) => `
           <div class="carousel-slide ${i === 0 ? 'active' : ''}" 
-               style="background-image: url('${img.trim()}'); height: 400px; background-size: cover; background-position: center;">
-            ${isFeatured && i === 0 ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600; z-index: 5;">FEATURED</span>' : ''}
+               style="background-image: url('${img.trim()}'); height: 400px; background-size: cover; background-position: center; ${i === 0 ? 'display: block !important; opacity: 1 !important; position: relative !important;' : 'display: none !important; position: absolute !important; width: 100%; top: 0; left: 0; opacity: 0 !important;'}">
+            ${isFeatured && i === 0 ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600; z-index: 2;">FEATURED</span>' : ''}
           </div>
         `).join('')}
-        <button class="carousel-prev" onclick="moveCarouselSlide(this, -1)" 
-                style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; z-index: 10; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px;">‹</button>
-        <button class="carousel-next" onclick="moveCarouselSlide(this, 1)" 
-                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; z-index: 10; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px;">›</button>
+        <button class="carousel-prev" onclick="moveSlide(this, -1)" 
+                style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; z-index: 3; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px;">‹</button>
+        <button class="carousel-next" onclick="moveSlide(this, 1)" 
+                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; z-index: 3; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px;">›</button>
       </div>
     `;
   }
@@ -195,7 +213,7 @@
   function createSingleImage(image, isFeatured) {
     return `
       <div class="img" style="background-image: url('${image}'); height: 400px; background-size: cover; background-position: center; position: relative;">
-        ${isFeatured ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600;">FEATURED</span>' : ''}
+        ${isFeatured ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600; z-index: 2;">FEATURED</span>' : ''}
       </div>
     `;
   }
