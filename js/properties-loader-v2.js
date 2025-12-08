@@ -169,9 +169,9 @@
           </div>
         `).join('')}
         <button class="carousel-prev" onclick="moveSlide(this, -1)" 
-                style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; cursor: pointer; z-index: 3; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; line-height: 1; transition: all 0.3s ease;">‹</button>
+                style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; cursor: pointer; z-index: 2; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; line-height: 1; transition: all 0.3s ease;">‹</button>
         <button class="carousel-next" onclick="moveSlide(this, 1)" 
-                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; cursor: pointer; z-index: 3; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; line-height: 1; transition: all 0.3s ease;">›</button>
+                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; cursor: pointer; z-index: 2; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; line-height: 1; transition: all 0.3s ease;">›</button>
       </div>
     `;
   }
