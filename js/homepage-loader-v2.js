@@ -120,6 +120,9 @@
       console.log('✅ Featured land rendered');
     }
     
+    // Initialize carousels after rendering
+    setTimeout(initCarousels, 100);
+    
     // Initialize carousels
     setTimeout(initCarousels, 100);
   }
@@ -198,7 +201,7 @@
       <div class="property-carousel" style="position: relative; height: 400px; overflow: hidden;">
         ${images.map((img, i) => `
           <div class="carousel-slide ${i === 0 ? 'active' : ''}" 
-               style="background-image: url('${img.trim()}'); height: 400px; background-size: cover; background-position: center; ${i === 0 ? 'display: block !important; opacity: 1 !important; position: relative !important;' : 'display: none !important; position: absolute !important; width: 100%; top: 0; left: 0; opacity: 0 !important;'}">
+               style="background-image: url('${img.trim()}'); height: 400px; background-size: cover; background-position: center; transition: none; ${i === 0 ? 'display: block; opacity: 1; position: relative;' : 'display: none; position: absolute; width: 100%; top: 0; left: 0; opacity: 0;'}">
             ${isFeatured && i === 0 ? '<span class="status" style="position: absolute; top: 10px; left: 10px; background: #F96D00; color: white; padding: 5px 15px; font-size: 12px; font-weight: 600; z-index: 2;">FEATURED</span>' : ''}
           </div>
         `).join('')}
@@ -229,26 +232,65 @@
   }
   
   function initCarousels() {
-    console.log('Carousels ready');
-  }
-  
-  // Global function for carousel navigation
-  window.moveCarouselSlide = function(button, direction) {
-    const carousel = button.closest('.property-carousel');
-    const slides = carousel.querySelectorAll('.carousel-slide');
-    let current = 0;
+    const carousels = document.querySelectorAll('.property-carousel');
+    console.log('Initializing', carousels.length, 'carousels');
     
-    slides.forEach((slide, i) => {
-      if (slide.classList.contains('active')) current = i;
-      slide.classList.remove('active');
+    carousels.forEach((carousel, index) => {
+      // Skip if already initialized
+      if (carousel.dataset.initialized === 'true') return;
+      carousel.dataset.initialized = 'true';
+      
+      const slides = carousel.querySelectorAll('.carousel-slide');
+      if (slides.length <= 1) return; // No need for carousel with single image
+      
+      // Set up auto-rotation
+      const intervalId = setInterval(() => {
+        const currentSlide = carousel.querySelector('.carousel-slide.active');
+        const currentIndex = Array.from(slides).indexOf(currentSlide);
+        const nextIndex = (currentIndex + 1) % slides.length;
+        
+        currentSlide.classList.remove('active');
+        currentSlide.style.display = 'none';
+        currentSlide.style.opacity = '0';
+        currentSlide.style.position = 'absolute';
+        
+        slides[nextIndex].classList.add('active');
+        slides[nextIndex].style.display = 'block';
+        slides[nextIndex].style.opacity = '1';
+        slides[nextIndex].style.position = 'relative';
+      }, 4000);
+      
+      // Store interval ID for cleanup
+      carousel.dataset.intervalId = intervalId;
+      
+      // Pause on hover
+      carousel.addEventListener('mouseenter', () => {
+        clearInterval(parseInt(carousel.dataset.intervalId));
+      });
+      
+      // Resume on mouse leave
+      carousel.addEventListener('mouseleave', () => {
+        const newIntervalId = setInterval(() => {
+          const currentSlide = carousel.querySelector('.carousel-slide.active');
+          const currentIndex = Array.from(slides).indexOf(currentSlide);
+          const nextIndex = (currentIndex + 1) % slides.length;
+          
+          currentSlide.classList.remove('active');
+          currentSlide.style.display = 'none';
+          currentSlide.style.opacity = '0';
+          currentSlide.style.position = 'absolute';
+          
+          slides[nextIndex].classList.add('active');
+          slides[nextIndex].style.display = 'block';
+          slides[nextIndex].style.opacity = '1';
+          slides[nextIndex].style.position = 'relative';
+        }, 4000);
+        carousel.dataset.intervalId = newIntervalId;
+      });
     });
     
-    current += direction;
-    if (current < 0) current = slides.length - 1;
-    if (current >= slides.length) current = 0;
-    
-    slides[current].classList.add('active');
-  };
+    console.log('✅ Carousels initialized with auto-rotation');
+  }
   
   // Cache functions
   function getCache() {
